@@ -1,0 +1,145 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins, sans-serif;
+}
+
+body{
+    background:url("../images/background.jpg");
+    background-size:cover;
+    background-position:center;
+    height:100vh;
+}
+
+.overlay{
+    width:100%;
+    height:100vh;
+    background:rgba(0,0,0,0.45);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+nav{
+    height:60px;
+    background:#63D7E5;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 40px;
+}
+
+.logo img{
+    height:50px;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+}
+
+nav ul li{
+    margin:0 20px;
+}
+
+nav ul li a{
+    text-decoration:none;
+    color:white;
+    font-size:18px;
+}
+
+.active{
+    border-bottom:3px solid white;
+    padding-bottom:5px;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    color:white;
+    font-size:18px;
+}
+
+.profile img{
+    height:42px;
+    margin-left:10px;
+}
+
+.container{
+    width:700px;
+    background:rgba(196,145,63,.78);
+    padding:40px;
+    border-radius:15px;
+    position:relative;
+}
+
+.title{
+    position:absolute;
+    top:-12px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#FFC15A;
+    padding:10px 35px;
+    font-weight:bold;
+}
+
+.row{
+    display:flex;
+    align-items:center;
+    margin:25px 0;
+}
+
+.row label{
+    width:150px;
+    background:#27C7F2;
+    padding:12px;
+    border-radius:15px;
+}
+
+.row input{
+    flex:1;
+    margin-left:25px;
+    background:transparent;
+    border:none;
+    border-bottom:3px dashed white;
+    padding:8px;
+    font-size:17px;
+    color:white;
+    outline:none;
+}
+
+textarea{
+    flex:1;
+    margin-left:25px;
+    height:70px;
+    background:transparent;
+    border:none;
+    border-bottom:3px dashed white;
+    color:white;
+    resize:none;
+    font-size:17px;
+    outline:none;
+}
+
+.buttonGroup{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    margin-top:35px;
+}
+
+.buttonGroup button{
+    width:140px;
+    padding:10px;
+    background:#C8FF63;
+    border:none;
+    font-weight:bold;
+    font-size:17px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.buttonGroup button:hover{
+    transform:scale(1.05);
+}
