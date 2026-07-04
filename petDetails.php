@@ -28,10 +28,10 @@
 <html>
 <head>
     <title>Pet Details</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <?php include 'includes/navbar.php'; ?>
+    <?php include 'navbar.php'; ?>
     <div class="background">
     <div class="card">
 

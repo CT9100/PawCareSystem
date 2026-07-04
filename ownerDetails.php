@@ -11,10 +11,10 @@
 <html>
 <head>
     <title>Owner Details</title>
-    <link rel="stylesheet" href="css/ownerDetails.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <?php include 'includes/navbar.php'; ?>
+    <?php include 'navbar.php'; ?>
     <div class="background">
         <div class="card">
             <h2>🐾 Owner Details</h2>
