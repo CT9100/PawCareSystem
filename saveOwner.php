@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    include("database/connection.php");
+    include("connection.php");
 
     $name=$_POST['name'];
     $phone=$_POST['phone'];

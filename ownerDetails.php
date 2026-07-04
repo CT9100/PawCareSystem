@@ -1,6 +1,6 @@
 <?php
     session_start();
-    include("database/connection.php");
+    include("connection.php");
     $customerID = $_SESSION['customerID'];
     $sql = "SELECT * FROM customer WHERE customerID='$customerID'";
     $result = mysqli_query($conn, $sql);
@@ -48,7 +48,7 @@
 
                 <div class="buttons">
                     <button type="button" id="editBtn" onclick="enableEdit()"> Edit </button>
-                    <button type="submit" id="saveBtn" style="display:none;"> Save </button>
+                    <button type="submit" name="save" id="saveBtn" style="display:none;"> Save </button>
                     <button type="button" onclick="history.back();"> Back </button>
                 </div>
             </form>
