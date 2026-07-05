@@ -2,10 +2,10 @@
 session_start();
 include 'connection.php';
 
-// if (!isset($_SESSION['staffID'])) {
-//     header("Location: login.php");
-//     exit();
-// }
+if (!isset($_SESSION['staffID'])) {
+    header("Location: login.php");
+    exit();
+}
 
 // 1. Capture search inputs from the URL if they exist
 $searchName = isset($_GET['search_name']) ? $_GET['search_name'] : '';
