@@ -2,10 +2,10 @@
 session_start();
 include 'connection.php';
 
-if (!isset($_SESSION['staffID'])) {
-    header("Location: login.php");
-    exit();
-}
+// if (!isset($_SESSION['staffID'])) {
+//     header("Location: login.php");
+//     exit();
+// }
 
 // 1. Capture search inputs from the URL if they exist
 $searchName = isset($_GET['search_name']) ? $_GET['search_name'] : '';
@@ -82,6 +82,7 @@ $result = $conn->query($query);
         
         .btn-update { background-color: #8be763; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; color: #333; width: 100%; font-size: 14px; }
         .btn-update:hover { background-color: #79d652; }
+        .btn-logout { color: red; text-decoration: none; margin: 0 15px; font-size: 18px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -94,8 +95,9 @@ $result = $conn->query($query);
             <a href="report.php">Report</a>
         </div>
         <div class="user-profile">
-            <div style="background: black; width: 35px; height: 35px; border-radius: 50%;"></div>
-        </div>
+        <a href="logout.php" class="btn-logout" onclick="return confirm('Are you sure you want to log out?')">Logout</a>
+        <div style="background: black; width: 35px; height: 35px; border-radius: 50%;"></div>
+    </div>
     </div>
 
     <div class="container">
