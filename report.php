@@ -55,6 +55,7 @@ $customerResult = $conn->query($customerQuery);
             .data-box { background: #f0f0f0; color: black; border: 1px solid #333; }
             .data-line { border-bottom: 2px dashed black; }
         }
+        .btn-logout { color: red; text-decoration: none; margin: 0 15px; font-size: 18px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -67,8 +68,9 @@ $customerResult = $conn->query($customerQuery);
             <a href="report.php" class="active">Report</a>
         </div>
         <div class="user-profile">
-            <div style="background: black; width: 35px; height: 35px; border-radius: 50%;"></div>
-        </div>
+        <a href="logout.php" class="btn-logout" onclick="return confirm('Are you sure you want to log out?')">Logout</a>
+        <div style="background: black; width: 35px; height: 35px; border-radius: 50%;"></div>
+    </div>
     </div>
 
     <div class="report-container">
