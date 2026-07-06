@@ -37,7 +37,7 @@
 
     if(mysqli_query($conn,$sql)){
         $_SESSION['customerID']=$customerID;
-        header("Location: petDetails.php");
+        header("Location: ownerDetails.php");
     }
 
     else{

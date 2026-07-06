@@ -30,118 +30,430 @@
     <title>Pet Details</title>
     <link rel="stylesheet" href="style.css">
 </head>
+<style>
+    *{
+        box-sizing:border-box;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body{
+        margin:0;
+        background:#f4f7f6;
+    }
+
+    /* NAVBAR */
+    .navbar{
+        background:#8cd3e6;
+        padding:15px 30px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        color:#2b5c8f;
+    }
+
+    /* BACKGROUND */
+    #bg-video{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        z-index:-2;
+    }
+
+    .overlay{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.45);
+        z-index:-1;
+    }
+
+    /* CONTAINER */
+    .container{
+        max-width:1100px;
+        margin:40px auto;
+        padding:20px;
+    }
+
+    /* GLASS CARD */
+    .card{
+        background:rgba(255,255,255,0.92);
+        backdrop-filter:blur(10px);
+        border-radius:15px;
+        padding:25px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.25);
+        margin-bottom:25px;
+    }
+
+    /* GRID FORM */
+    .form-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:15px;
+    }
+
+    .form-group{
+        display:flex;
+        flex-direction:column;
+    }
+
+    .form-group label{
+        font-size:12px;
+        color:#777;
+        margin-bottom:5px;
+    }
+
+    input, select{
+        padding:12px;
+        border-radius:10px;
+        border:2px solid #eee;
+    }
+
+    /* BUTTON */
+    button{
+        padding:12px 18px;
+        border:none;
+        border-radius:20px;
+        cursor:pointer;
+        font-weight:bold;
+    }
+
+    button[name="save"], button[name="update"]{
+        background:#8cd3e6;
+        color:#2b5c8f;
+    }
+
+    button[type="button"]{
+        background:#eee;
+    }
+
+    /* PET GRID */
+    .pet-grid{
+        display:grid;
+        grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+        gap:20px;
+    }
+
+    /* PET CARD */
+    .pet-card{
+        background:rgba(255,255,255,0.92);
+        border-radius:15px;
+        padding:20px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.2);
+        transition:0.3s;
+    }
+
+    .pet-card:hover{
+        transform:translateY(-5px);
+    }
+
+    .pet-title{
+        font-size:18px;
+        font-weight:bold;
+        color:#2b5c8f;
+    }
+
+    .pet-type{
+        color:#777;
+        margin-bottom:10px;
+    }
+
+    .actions a{
+        text-decoration:none;
+        font-size:13px;
+        margin-right:10px;
+    }
+
+    .delete{
+        color:red;
+    }
+    .edit{
+        color:#f3be6b;
+    }
+
+    .paw{
+        position:fixed;
+        bottom:-50px;
+        font-size:24px;
+        opacity:0.35;
+        z-index:1; /* IMPORTANT: above overlay */
+        animation:floatUp linear infinite;
+        pointer-events:none;
+    }
+
+    @keyframes floatUp{
+        0%{
+            transform:translateY(0) translateX(0) rotate(0deg);
+            opacity:0;
+        }
+        10%{
+            opacity:0.4;
+        }
+        100%{
+            transform:translateY(-110vh) translateX(40px) rotate(360deg);
+            opacity:0;
+        }
+    }
+
+    .layout{
+        display:flex;
+        gap:20px;
+    }
+
+    /* LEFT SIDE */
+    .list-card{
+        flex:2;
+        max-height:80vh;
+        overflow-y:auto;
+    }
+
+    /* RIGHT SIDE */
+    .form-card{
+        flex:1;
+        display:none;
+        flex-direction: column;
+    }
+
+    /* NAV BUTTON */
+    .navbar{
+        background:#8cd3e6;
+        padding:15px 30px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .nav-btn{
+        background:#f3be6b;
+        padding:10px 15px;
+        border-radius:20px;
+        border:none;
+        cursor:pointer;
+        font-weight:bold;
+        text-decoration:none;
+        color:#333;
+    }
+
+    .modal{
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.6);
+        z-index:10000;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .modal-content{
+        background:white;
+        padding:30px;
+        border-radius:15px;
+        width:300px;
+        text-align:center;
+    }
+
+    .close{
+        float:right;
+        cursor:pointer;
+        font-size:22px;
+    }
+</style>
 <body>
-    <?php include 'navbar.php'; ?>
-    <div class="background">
-    <div class="card">
+<div class="navbar">
+    <div>🐾 PawCare - Pet Details</div>
 
-    <h2>🐾 Pet Details</h2>
-    <?php
-        if(isset($_SESSION['success'])){
-    ?>
-
-    <div class="success-message">
-        <?php
-        echo $_SESSION['success'];
-        unset($_SESSION['success']);
-        ?>
+    <div>
+        <button onclick="toggleForm()" class="nav-btn">➕ Add Pet</button>
+        <a href="dashboard.php" class="nav-btn">← Back</a>
     </div>
+</div>
+<video autoplay muted loop playsinline id="bg-video">
+    <source src="videos/dog.mp4" type="video/mp4">
+</video>
 
-    <?php
-        }
-            if(isset($_SESSION['error']))
-        {
-    ?>
+<div class="overlay"></div>
 
-    <div class="error-message">
-        <?php
-        echo $_SESSION['error'];
-        unset($_SESSION['error']);
-        ?>
-    </div>
-    <?php
-        }
-    ?>
+<div class="container">
 
-    <form action="<?php echo ($edit) ? 'updatePet.php' : 'savePet.php'; ?>" method="POST">
-        <hr><h2>🐶 My Pets</h2>
-        <input type="text" id="searchPet" placeholder="Search pet..."
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Breed</th>
-                <th>Birth Date</th>
-                <th>Action</th>
-            </tr>
+    <div class="layout">
+
+        <!-- LEFT: PET LIST -->
+        <div class="card list-card">
+
+            <h2>🐶 My Pets</h2>
+
+            <div class="pet-grid">
+
             <?php
-                $sql = "SELECT * FROM pet
-                WHERE customerID='$customerID'
-                ORDER BY petName";
-                $result = mysqli_query($conn,$sql);
-                while($row=mysqli_fetch_assoc($result))
-                {
+            $sql = "SELECT * FROM pet WHERE customerID='$customerID' ORDER BY petName";
+            $result = mysqli_query($conn,$sql);
+
+            while($row=mysqli_fetch_assoc($result)){
             ?>
-            <tr>
-                <td><?php echo $row['petID']; ?></td>
-                <td><?php echo $row['petName']; ?></td>
-                <td><?php echo $row['petType']; ?></td>
-                <td><?php echo $row['breed']; ?></td>
-                <td><?php echo $row['birthDate']; ?></td>
-                <td>
-                    <a
-                        href="deletePet.php?id=<?php echo $row['petID']; ?>"
-                        onclick="return confirm('Are you sure you want to delete <?php echo $row['petName']; ?>?');"
-                        class="delete-btn">
-                        🗑 Delete
-                    </a>
-                </td>
-            </tr>
-            <?php } ?>
-        </table>
-        <input type="hidden" name="customerID" value="<?php echo $customerID; ?>">
-        <input type="hidden" name="petID" value="<?php echo $petID; ?>">
 
-        <div class="form-group">
-            <label>Pet Name</label>
-            <input type="text" name="petName" value="<?php echo $petName; ?>" required>
-        </div>
+                <div class="pet-card"
+                    onclick="openPet(
+                        '<?php echo addslashes($row['petName']); ?>',
+                        '<?php echo addslashes($row['petType']); ?>',
+                        '<?php echo addslashes($row['breed']); ?>',
+                        '<?php echo $row['birthDate']; ?>'
+                    )">
 
-        <div class="form-group">
-            <label>Pet Type</label>
-            <select name="petType" required>
-                <option value="">-- Select Pet Type --</option>
-                <option value="Dog" <?php if($petType=="Dog") echo "selected"; ?>> Dog </option>
-                <option value="Cat" <?php if($petType=="Cat") echo "selected"; ?>> Cat </option>
-                <option value="Rabbit" <?php if($petType=="Rabbit") echo "selected"; ?>> Rabbit </option>
-                <option value="Bird" <?php if($petType=="Bird") echo "selected"; ?>> Bird </option>                </select>
-        </div>
+                    <div class="pet-title">
+                        <?php echo $row['petName']; ?>
+                    </div>
 
-        <div class="form-group">
-            <label>Breed</label>
-            <input type="text" name="breed" value="<?php echo $breed; ?>" required>
-        </div>
+                    <div class="pet-type">
+                        <?php echo $row['petType']; ?> • <?php echo $row['breed']; ?>
+                    </div>
 
-        <div class="form-group">
-            <label>Birth Date</label>
-            <input type="date" name="birthDate" value="<?php echo $birthDate; ?>" required>
-        </div>
+                    <div class="actions">
+                        <a class="edit" href="petDetails.php?edit=<?php echo $row['petID']; ?>">Edit</a>
 
-        <div class="buttons">
-            <button type="submit" name="<?php echo ($edit) ? 'update' : 'save'; ?>">
-                <?php if($edit) echo "Update Pet"; else echo "Add Pet"; ?>
-            </button>
-            <?php if($edit){ ?>
+                        <a class="delete"
+                           onclick="return confirm('Delete <?php echo $row['petName']; ?>?');"
+                           href="deletePet.php?id=<?php echo $row['petID']; ?>">
+                           Delete
+                        </a>
+                    </div>
 
-            <a href="petDetails.php">
-                <button type="button"> Cancel </button>
-            </a>
+                </div>
 
             <?php } ?>
+
+            </div>
+
         </div>
-    </form>
+
+        <!-- RIGHT: FORM (HIDDEN INITIALLY) -->
+        <div class="card form-card" id="formCard">
+
+            <h2>🐾 <?php echo $edit ? "Edit Pet" : "Add Pet"; ?></h2>
+
+            <form action="<?php echo ($edit) ? 'updatePet.php' : 'savePet.php'; ?>" method="POST">
+
+                <input type="hidden" name="customerID" value="<?php echo $customerID; ?>">
+                <input type="hidden" name="petID" value="<?php echo $petID; ?>">
+
+                <div class="form-group">
+                    <label>Pet Name</label>
+                    <input type="text" name="petName" value="<?php echo $petName; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Pet Type</label>
+                    <select name="petType" required>
+                        <option value="">Select</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Rabbit">Rabbit</option>
+                        <option value="Bird">Bird</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Breed</label>
+                    <input type="text" name="breed" value="<?php echo $breed; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Birth Date</label>
+                    <input type="date" name="birthDate" value="<?php echo $birthDate; ?>" required>
+                </div>
+
+                <button type="submit" name="<?php echo $edit ? 'update' : 'save'; ?>">
+                    <?php echo $edit ? "Update Pet" : "Save Pet"; ?>
+                </button>
+            </form>
+        </div>
     </div>
+</div>
+<div class="paw">🐾</div>
+<div class="paw">🐾</div>
+<div class="paw">🐾</div>
+<div class="paw">🐾</div>
+<div class="paw">🐾</div>
+<div class="paw">🐾</div>
+<div class="paw">🐾</div>
+<div class="paw">🐾</div>
+<div class="paw">🐾</div>
+<div class="paw">🐾</div>
+<script>
+    window.onload = function(){
+
+        document.querySelectorAll('.paw').forEach(paw=>{
+
+            paw.style.left = Math.random()*100 + "vw";
+            paw.style.animationDuration = (5 + Math.random()*6) + "s";
+            paw.style.fontSize = (16 + Math.random()*22) + "px";
+            paw.style.animationDelay = Math.random()*5 + "s";
+
+        });
+
+    };
+</script>
+<div id="petModal" class="modal">
+    <div class="modal-content">
+
+        <span class="close" onclick="closeModal()">&times;</span>
+
+        <h2 id="mName"></h2>
+        <p id="mType"></p>
+        <p id="mBreed"></p>
+        <p id="mBirth"></p>
+
     </div>
+</div>
+<script>
+    function openPet(name,type,breed,birth){
+
+        let birthDate = new Date(birth);
+        let today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let m = today.getMonth() - birthDate.getMonth();
+
+        if(m < 0 || (m === 0 && today.getDate() < birthDate.getDate())){
+            age--;
+        }
+
+        document.getElementById("petModal").style.display="flex";
+
+        document.getElementById("mName").innerText = "🐾 " + name;
+        document.getElementById("mType").innerText = "Type: " + type;
+        document.getElementById("mBreed").innerText = "Breed: " + breed;
+        document.getElementById("mBirth").innerText =
+            "Birth: " + birth + " | Age: " + age + " years";
+    }
+</script>
+<script>
+    function closeModal(){
+    let modal = document.getElementById("petModal");
+    if(modal){
+        modal.style.display = "none";
+    }
+}
+</script>
+<script>
+function toggleForm(){
+    const form = document.getElementById("formCard");
+
+    if(!form) return;
+
+    if(form.style.display === "flex"){
+        form.style.display = "none";
+    } else {
+        form.style.display = "flex";
+        form.scrollIntoView({behavior:"smooth"});
+    }
+}
+</script>
 </body>
 </html>

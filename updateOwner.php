@@ -32,7 +32,7 @@ if(isset($_POST['save']))
 
         echo "<script>
                 alert('Owner details updated successfully!');
-                window.location='petDetails.php';
+                window.location='ownerDetails.php';
               </script>";
     }
     else

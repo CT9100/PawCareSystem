@@ -255,7 +255,6 @@ $total_appointments = $app_count_data['total_apps'];
             <table>
                 <thead>
                     <tr>
-                        <th>Appointment ID</th>
                         <th>Pet Name</th>
                         <th>Pet Type</th>
                         <th>Booking Date</th>
@@ -281,7 +280,6 @@ $total_appointments = $app_count_data['total_apps'];
                             if (strtolower($row['status']) == 'cancelled') $status_class = "status-cancelled";
 
                             echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row['appointmentID']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['petName']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['petType']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['bookingDate']) . "</td>";
@@ -289,7 +287,7 @@ $total_appointments = $app_count_data['total_apps'];
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='5' style='text-align: center; color: #888;'>No scheduled appointments found.</td></tr>";
+                        echo "<tr><td colspan='4' style='text-align: center; color: #888;'>No scheduled appointments found.</td></tr>";
                     }
                     ?>
                 </tbody>
