@@ -64,202 +64,246 @@ if (isset($_POST['register'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawCare - Register</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
     <style>
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #8cd3e6; /* Light blue background matching image_46b0e5.png */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px 0;
+
+        body{
+            margin:0;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+            overflow:hidden;
         }
-        .register-container {
-            display: flex;
-            align-items: center;
-            gap: 50px;
-            max-width: 950px;
-            width: 100%;
-            padding: 20px;
+
+        #bg-video{
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            z-index:-2;
         }
-        /* Left Section (Image & Logo Stack) */
-        .left-panel {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 45%;
+
+        body::before{
+            content:"";
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,.45);
+            z-index:-1;
         }
-        .showcase-img {
-            width: 100%;
-            border-radius: 4px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+        .login-container {
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            width:100%;
         }
-        .logo-box {
-            background: white;
-            padding: 10px 25px;
-            border-radius: 4px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            margin-top: -40px; /* Slight offset overlap matching template layout */
-            width: 180px;
+
+        .right-panel{
+            width:750px;
+            max-width:90%;
+            background:rgba(255,255,255,.88);
+            backdrop-filter:blur(20px);
+            border-radius:20px;
+            padding:45px;
+            box-shadow:0 15px 35px rgba(0,0,0,.25);
+            transition:.3s;
         }
-        .logo-text {
-            font-weight: bold;
-            font-size: 22px;
-            color: #2b5c8f;
+
+        .right-panel:hover{
+            transform:translateY(-4px);
         }
-        /* Right Section (Form Card) */
-        .right-panel {
-            width: 55%;
-            background-color: #e1e1e1; /* Off-white container card */
-            border: 5px solid white;
-            border-radius: 12px;
-            padding: 35px 30px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+
+        .form-header{
+            text-align:center;
+            margin-bottom:25px;
         }
-        .form-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            width: 100%;
+
+        .form-header h2{
+            margin:0;
         }
-        .label-pill {
-            background-color: #f3be6b; /* Muted orange/yellow pills */
-            color: #333;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            width: 150px;
-            text-align: center;
-            font-size: 13px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            flex-shrink: 0;
+
+        .form-group{
+            display:flex;
+            flex-direction:column;
+            margin-bottom:18px;
         }
-        .input-field {
-            flex-grow: 1;
-            background: transparent;
-            border: none;
-            border-bottom: 2px dashed #333; /* Dashed input lines from layout image_46b0e5.png */
-            margin-left: 20px;
-            padding: 5px 10px;
-            font-size: 15px;
-            color: #333;
-            outline: none;
+
+        .form-group label{
+            font-size:14px;
+            font-weight:600;
+            color:#555;
+            margin-bottom:8px;
         }
-        textarea.input-field {
-            resize: none;
-            height: 45px;
+
+        .input-field{
+            width:100%;
+            padding:14px;
+            border:2px solid #ddd;
+            border-radius:12px;
+            font-size:15px;
+            transition:.3s;
         }
-        .action-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 25px;
+
+        .input-field:focus{
+            border-color:#5EC6D8;
+            box-shadow:0 0 10px rgba(94,198,216,.3);
+            outline:none;
         }
-        .btn-submit {
-            background-color: #f3be6b;
-            color: #333;
-            font-weight: bold;
-            border: none;
-            padding: 12px 50px;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.1s;
+
+        .btn-login{
+            width:100%;
+            background:#5EC6D8;
+            color:white;
+            padding:14px;
+            border:none;
+            border-radius:14px;
+            font-size:18px;
+            font-weight:600;
+            cursor:pointer;
+            transition:.3s;
+            margin-top:10px;
         }
-        .btn-submit:active {
-            transform: scale(0.98);
+
+        .btn-login:hover{
+            background:#42b7cb;
+            transform:translateY(-2px);
         }
-        .login-link {
-            margin-top: 15px;
-            color: #2b5c8f;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
+
+        .error-msg{
+            background:#ffe8e8;
+            color:#d32f2f;
+            padding:12px;
+            border-radius:10px;
+            margin-bottom:20px;
+            border-left:5px solid #d32f2f;
+            text-align:center;
         }
-        .error-msg {
-            color: #d9534f;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 15px;
+
+        .success-msg{
+            background:#e8ffe8;
+            color:#2e7d32;
+            padding:12px;
+            border-radius:10px;
+            margin-bottom:20px;
+            border-left:5px solid #2e7d32;
+            text-align:center;
         }
-        .success-msg {
-            color: #5cb85c;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 15px;
+
+        .login-link{
+            text-align:center;
+            margin-top:15px;
+        }
+
+        .login-link a{
+            color:#5EC6D8;
+            font-weight:600;
+            text-decoration:none;
+        }
+
+        .password-container{
+            position:relative;
+        }
+
+        .toggle-password{
+            position:absolute;
+            right:18px;
+            top:50%;
+            transform:translateY(-50%);
+            cursor:pointer;
+            color:#777;
+        }
+
+        .register-grid{
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            gap:15px 20px;
+        }
+
+        .full-width{
+            grid-column: span 2;
+        }
+
+        .form-group{
+            margin-bottom:0;
+        }
+
+        textarea.input-field{
+            height:90px;
+            resize:none;
         }
     </style>
 </head>
+
 <body>
 
-<div class="register-container">
-    
-    <!-- Left panel structural visual match -->
-    <div class="left-panel">
-        <img src="image_46b0e5.png" alt="PawCare Layout" class="showcase-img">
-        <div class="logo-box">
-            <span class="logo-text">🐾 PawCare</span>
-        </div>
-    </div>
+<video autoplay muted loop playsinline id="bg-video">
+    <source src="videos/kitten.mp4" type="video/mp4">
+</video>
 
-    <!-- Right panel registration entry flow -->
+<div class="login-container">
+
     <div class="right-panel">
+
+        <div class="form-header">
+            <h2>Create Account 🐾</h2>
+            <p>Register to start using PawCare</p>
+        </div>
+
         <?php if(!empty($message)): ?>
-            <div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div>
+            <div class="<?php echo $messageClass; ?>">
+                <?php echo $message; ?>
+            </div>
         <?php endif; ?>
 
-        <form action="register.php" method="POST">
-            <!-- Username (stores directly to customer name attribute) -->
+        <form action="register.php" method="POST" class="register-grid">
             <div class="form-group">
-                <div class="label-pill">Username</div>
-                <input type="text" name="username" class="input-field" required placeholder="Your full name...">
+                <label>Username</label>
+                <input type="text" name="username" class="input-field" required>
             </div>
 
-            <!-- Email Address Entry -->
             <div class="form-group">
-                <div class="label-pill">Email</div>
-                <input type="email" name="email" class="input-field" required placeholder="example@mail.com">
+                <label>Email</label>
+                <input type="email" name="email" class="input-field" required>
             </div>
 
-            <!-- Phone Number Entry -->
             <div class="form-group">
-                <div class="label-pill">Phone Number</div>
-                <input type="tel" name="phone" class="input-field" required placeholder="012-3456789">
+                <label>Phone</label>
+                <input type="tel" name="phone" class="input-field" required>
             </div>
 
-            <!-- Password Entry -->
             <div class="form-group">
-                <div class="label-pill">Password</div>
+                <label>Password</label>
                 <input type="password" name="password" class="input-field" required>
             </div>
 
-            <!-- Confirm Password Entry -->
             <div class="form-group">
-                <div class="label-pill">Confirm Password</div>
+                <label>Confirm Password</label>
                 <input type="password" name="confirm_password" class="input-field" required>
             </div>
 
-            <!-- Home Address Entry -->
-            <div class="form-group">
-                <div class="label-pill">Address</div>
-                <textarea name="address" class="input-field" required placeholder="Full home address..."></textarea>
+            <div class="form-group full-width">
+                <label>Address</label>
+                <textarea name="address" class="input-field" required></textarea>
             </div>
 
-            <div class="action-container">
-                <button type="submit" name="register" class="btn-submit">Create account</button>
-                <a href="login.php" class="login-link">Already have an account? Login here</a>
-            </div>
+            <button type="submit" name="register" class="btn-login full-width">
+                Create Account
+            </button>
         </form>
     </div>
 
 </div>
 
 </body>
-</html>
