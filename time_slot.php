@@ -91,17 +91,15 @@ $result = $conn->query($query);
     </style>
 </head>
 <body>
-
-    <div class="navbar">
-    <div class="logo">🐾 PawCare</div>
-    
-    <div class="nav-links">
-        <a href="admin_dashboard.php">Booking record</a>
-        <a href="time_slot.php" class="active">Time Slots</a>
-        <a href="report.php">Report</a>
-    </div>
-    
-    <div class="user-profile">
+   <div class="navbar">
+        <div class="logo">🐾 PawCare</div>
+        <div class="nav-links">
+            <a href="admin_dashboard.php">Booking Record</a>
+            <a href="service.php">Services</a>
+            <a href="time_slot.php" class="active" >Time Slots</a>
+            <a href="report.php">Report</a>
+        </div>
+        <div class="user-profile">
         <a href="logout.php" class="btn-logout" onclick="return confirm('Are you sure you want to log out?')">Logout</a>
         <div style="background: black; width: 35px; height: 35px; border-radius: 50%;"></div>
     </div>

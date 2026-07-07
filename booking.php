@@ -17,6 +17,9 @@ $owner = mysqli_fetch_assoc($owner_result);
 // 2. Fetch distinct dates that have available slots in the timeslot table
 $date_sql = "SELECT DISTINCT slotDate FROM timeslot WHERE availability = 'Available' AND slotDate >= CURDATE() ORDER BY slotDate ASC";
 $date_result = mysqli_query($conn, $date_sql);
+// Fetch all available grooming services
+$service_sql = "SELECT * FROM grooming ORDER BY serviceName ASC";
+$service_result = mysqli_query($conn, $service_sql);
 
 // 3. Handle the AJAX request inline if a date is selected dynamically
 if (isset($_GET['ajax_date'])) {
@@ -49,12 +52,12 @@ if (isset($_GET['ajax_date'])) {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
+        body{
+            margin:0;
+            padding:0;
+            background:#f4f7f6;
+            min-height:100vh;
+            overflow-x:hidden;
         }
         
         /* Top Navigation Header Matching image_47a522.png Layout Exactly */
@@ -89,23 +92,16 @@ if (isset($_GET['ajax_date'])) {
         .nav-links a.active {
             border-bottom: 3px solid white;
         }
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            color: white;
-        }
-        .avatar-icon {
-            width: 35px;
-            height: 35px;
-            background-color: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #333;
-            font-weight: bold;
+
+        .nav-btn{
+            background:#f3be6b;
+            padding:10px 15px;
+            border-radius:20px;
+            border:none;
+            cursor:pointer;
+            font-weight:bold;
+            text-decoration:none;
+            color:#333;
         }
 
         /* Center Glassmorphism Booking Container matching image_47a522.png */
@@ -116,27 +112,33 @@ if (isset($_GET['ajax_date'])) {
             padding: 40px 20px;
             min-height: calc(100vh - 75px);
         }
-        .booking-card {
-            background-color: rgba(210, 165, 109, 0.75); /* Warm brown semi-transparent overlay */
-            width: 100%;
-            max-width: 750px;
-            border-radius: 20px;
-            padding: 40px;
-            position: relative;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        .booking-card{
+            width:100%;
+            max-width:900px;
+            background:rgba(255,255,255,.92);
+            backdrop-filter:blur(12px);
+            border-radius:20px;
+            padding:35px;
+            box-shadow:0 10px 30px rgba(0,0,0,.25);
+            position:relative;
         }
-        .card-header-badge {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #fcae68;
-            color: #2b5c8f;
-            padding: 6px 30px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 16px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        .card-header-badge{
+            position:absolute;
+            top:-18px;
+            left:50%;
+            transform:translateX(-50%);
+
+            background:#8cd3e6;
+            color:#2b5c8f;
+
+            padding:10px 28px;
+
+            border-radius:30px;
+
+            font-weight:bold;
+
+            box-shadow:0 5px 12px rgba(0,0,0,.15);
         }
 
         /* Visual Structure Forms matching Blue Labels and Dashed Lines */
@@ -162,30 +164,26 @@ if (isset($_GET['ajax_date'])) {
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .input-underlined {
-            background: transparent;
-            border: none;
-            border-bottom: 2px dashed white;
-            color: white;
-            font-size: 16px;
-            padding: 5px 0;
-            width: 100%;
-            outline: none;
+        .input-underlined,
+        .date-picker-custom{
+            width:100%;
+            padding:12px;
+            border-radius:10px;
+            border:2px solid #dcdcdc;
+            background:#fff;
+            color:#555;
+            outline:none;
+            transition:.3s;
         }
-        .input-underlined option {
-            background-color: #d2a56d;
-            color: white;
+
+        .input-underlined option{
+            color:#555;
+            background:#fff;
         }
-        
-        .date-picker-custom {
-            background: transparent;
-            border: 2px solid white;
-            border-radius: 4px;
-            color: white;
-            padding: 10px;
-            font-size: 14px;
-            width: 100%;
-            outline: none;
+
+        .input-underlined:focus,
+        .date-picker-custom:focus{
+            border-color:#8cd3e6;
         }
 
         /* Dynamic Slot Selection Area */
@@ -193,17 +191,18 @@ if (isset($_GET['ajax_date'])) {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            color: white;
+            color: #555;
             max-height: 150px;
             overflow-y: auto;
             padding-right: 5px;
         }
-        .slot-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 5px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.3);
+        .slot-row{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:8px 0;
+            border-bottom:1px dashed #ddd;
+            color:#555;
         }
         .slot-row input[type="radio"] {
             accent-color: #c9f281;
@@ -217,40 +216,89 @@ if (isset($_GET['ajax_date'])) {
             justify-content: center;
             margin-top: 30px;
         }
-        .save-btn {
-            background-color: #c9f281;
-            color: #2b5c8f;
-            border: none;
-            padding: 10px 60px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background 0.2s;
+       .save-btn{
+            background:#8cd3e6;
+            color:#2b5c8f;
+            padding:12px 45px;
+            border:none;
+            border-radius:25px;
+            font-size:16px;
+            font-weight:bold;
+            transition:.3s;
         }
-        .save-btn:hover {
-            background-color: #b3df6b;
+
+        .save-btn:hover{
+            transform:translateY(-3px);
+            background:#75c7dd;
+        }
+
+        /* ===== FLOATING PAWS ===== */
+        .paw{
+            position:fixed;
+            bottom:-50px;
+            font-size:24px;
+            opacity:0.35;
+            z-index:1; /* IMPORTANT: above overlay */
+            animation:floatUp linear infinite;
+            pointer-events:none;
+        }
+
+        @keyframes floatUp{
+            0%{
+                transform:translateY(0) translateX(0) rotate(0deg);
+                opacity:0;
+            }
+            10%{
+                opacity:0.4;
+            }
+            100%{
+                transform:translateY(-110vh) translateX(40px) rotate(360deg);
+                opacity:0;
+            }
+        }
+
+        /* VIDEO BACKGROUND */
+        #bg-video{
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            z-index:-2;
+        }
+
+        /* DARK OVERLAY */
+        .overlay{
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,.35);
+            z-index:-1;
         }
     </style>
 </head>
 <body>
-
-    <!-- Main Navigation Bar Block Elements matching image_47a522.png -->
     <div class="navbar">
         <div class="logo-container">
             <span style="color:#2b5c8f; font-weight:bold; font-size:18px;">🐾 PawCare</span>
         </div>
         <div class="nav-links">
             <a href="booking.php" class="active">Booking</a>
-            <a href="ownerDetails.php">Owner details</a>
-            <a href="petDetails.php">Pet details</a>
+            <a href="petDetails.php">My Pets</a>
+            <a href="ownerDetails.php">My Profile</a>
         </div>
-        <div class="user-profile">
-            <span>Welcome, <?php echo htmlspecialchars($owner['name'] ?? 'USER'); ?></span>
-            <div class="avatar-icon">👤</div>
+        <div>
+            <a href="dashboard.php" class="nav-btn">← Back</a>
         </div>
     </div>
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="videos/grooming.mp4" type="video/mp4">
+    </video>
+
+    <div class="overlay"></div>
 
     <!-- Interactive Centralized Dynamic Booking Structure -->
     <div class="booking-wrapper">
@@ -285,9 +333,36 @@ if (isset($_GET['ajax_date'])) {
                         </select>
                     </div>
 
+                    <!-- Grooming Service -->
+                    <div class="form-group">
+                        <label class="label-badge">Grooming Service :</label>
+                        <select name="serviceID" class="input-underlined" required>
+                            <option value="">-- Select Grooming Service --</option>
+                            <?php
+                                while($service = mysqli_fetch_assoc($service_result))
+                                {
+                                ?>
+                                <option
+                                    value="<?php echo $service['serviceID']; ?>"
+                                    data-description="<?php echo htmlspecialchars($service['description']); ?>"
+                                    data-price="<?php echo number_format($service['price'],2); ?>"
+                                    data-duration="<?php echo $service['duration']; ?>">
+                                    <?php
+                                        echo htmlspecialchars($service['serviceName']);
+                                    ?>
+                                </option>
+                                <?php
+                                }
+                            ?>
+                        </select>
+                        <div id="serviceDescription" style="margin-top:10px;color:#666;font-size:13px;line-height:1.6;">
+                            Select a grooming service to view details.
+                        </div>
+                    </div>
+
                     <!-- Date Picker sourcing fields directly from DB timeslots -->
                     <div class="form-group">
-                        <label class="label-badge">choose date :</label>
+                        <label class="label-badge">Choose date :</label>
                         <select id="bookingDate" name="bookingDate" class="date-picker-custom" onchange="fetchTimeslots(this.value)" required>
                             <option value="">-- Select an Available Date --</option>
                             <?php
@@ -301,9 +376,9 @@ if (isset($_GET['ajax_date'])) {
 
                     <!-- Dynamic Real-Time Time Slot Option container -->
                     <div class="form-group">
-                        <label class="label-badge">choose Time :</label>
+                        <label class="label-badge">Choose Time :</label>
                         <div id="slots-target" class="slots-container">
-                            <span style="color: #eee; font-style: italic; font-size: 13px;">Please select a date first...</span>
+                            <span style="color: #666; font-style: italic; font-size: 13px;">Please select a date first...</span>
                         </div>
                     </div>
 
@@ -322,11 +397,11 @@ if (isset($_GET['ajax_date'])) {
     function fetchTimeslots(dateVal) {
         const slotsContainer = document.getElementById('slots-target');
         if (!dateVal) {
-            slotsContainer.innerHTML = '<span style="color: #eee; font-style: italic; font-size: 13px;">Please select a date first...</span>';
+            slotsContainer.innerHTML ='<span style="color:#777;font-style:italic;">Please select a date first...</span>';
             return;
         }
 
-        slotsContainer.innerHTML = '<span style="color: #eee; font-style: italic; font-size: 13px;">Loading times...</span>';
+        slotsContainer.innerHTML ='<span style="color:#777;font-style:italic;">Loading available times...</span>';
 
         // Targets booking.php directly using url query parameters
         fetch(`booking.php?ajax_date=${dateVal}`)
@@ -334,7 +409,7 @@ if (isset($_GET['ajax_date'])) {
             .then(data => {
                 slotsContainer.innerHTML = '';
                 if (data.length === 0) {
-                    slotsContainer.innerHTML = '<span style="color: #ffb3b3; font-weight: bold; font-size: 13px;">No available slots for this date.</span>';
+                    slotsContainer.innerHTML = '<span style="color:#d9534f;font-weight:bold;">No available slots for this date.</span>';
                     return;
                 }
 
@@ -349,10 +424,61 @@ if (isset($_GET['ajax_date'])) {
                 });
             })
             .catch(err => {
-                slotsContainer.innerHTML = '<span style="color: #ffb3b3; font-size: 13px;">Error processing timeslots.</span>';
+                slotsContainer.innerHTML = '<span style="color:#d9534f;">Unable to load available times.</span>';
                 console.error(err);
             });
     }
+    </script>
+    <script>
+        const serviceSelect = document.querySelector('select[name="serviceID"]');
+        const serviceDesc = document.getElementById("serviceDescription");
+
+        serviceSelect.addEventListener("change", function(){
+
+        if(this.selectedIndex === 0)
+        {
+            serviceDesc.innerHTML = "Select a grooming service to view details.";
+            return;
+        }
+
+        const option = this.options[this.selectedIndex];
+
+        serviceDesc.innerHTML =
+            "<strong>Description:</strong> " + option.dataset.description +
+            "<br><strong>Duration:</strong> " + option.dataset.duration + " minutes" +
+            "<br><strong>Price:</strong> RM " + option.dataset.price;
+        });
+    </script>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <div class="paw">🐾</div>
+    <script>
+    document.querySelectorAll('.paw').forEach(paw => {
+
+        // spread across full screen width
+        paw.style.left = Math.random() * 100 + "vw";
+
+        // random size (makes it cute, not robotic)
+        let size = 18 + Math.random() * 22;
+        paw.style.fontSize = size + "px";
+
+        // different speeds (important for visibility)
+        let duration = 6 + Math.random() * 6;
+        paw.style.animationDuration = duration + "s";
+
+        // delay so they don't spawn at same time
+        paw.style.animationDelay = Math.random() * 5 + "s";
+    });
     </script>
 </body>
 </html>

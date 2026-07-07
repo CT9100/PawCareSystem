@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:8111
--- Generation Time: Jul 05, 2026 at 07:48 AM
+-- Generation Time: Jul 07, 2026 at 03:39 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -32,9 +32,16 @@ CREATE TABLE `appointment` (
   `petID` varchar(10) DEFAULT NULL,
   `serviceID` varchar(10) DEFAULT NULL,
   `slotID` varchar(10) DEFAULT NULL,
-  `bookingDate` date DEFAULT NULL,
   `status` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `appointment`
+--
+
+INSERT INTO `appointment` (`appointmentID`, `petID`, `serviceID`, `slotID`, `status`) VALUES
+('A001', 'P005', '1', 'T001', 'Cancelled'),
+('A002', 'P002', '2', 'T002', 'Completed');
 
 -- --------------------------------------------------------
 
@@ -47,9 +54,16 @@ CREATE TABLE `customer` (
   `name` varchar(50) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
   `phone` varchar(15) DEFAULT NULL,
-  `password` varchar(10) DEFAULT NULL,
+  `password` varchar(250) DEFAULT NULL,
   `address` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `customer`
+--
+
+INSERT INTO `customer` (`customerID`, `name`, `email`, `phone`, `password`, `address`) VALUES
+('1', 'Nia Isabelle', 'niaisabelle22@gmail.com', '01125127485', 'Niaisabelle2004', 'UITM KAMPUS 2 SAMARAHAN');
 
 -- --------------------------------------------------------
 
@@ -58,12 +72,20 @@ CREATE TABLE `customer` (
 --
 
 CREATE TABLE `grooming` (
-  `serviceID` varchar(10) NOT NULL,
+  `serviceID` int(11) NOT NULL,
   `serviceName` varchar(100) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `duration` int(11) DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `grooming`
+--
+
+INSERT INTO `grooming` (`serviceID`, `serviceName`, `description`, `duration`, `price`) VALUES
+(1, 'Full Grooming', 'Medicated Bath\r\nBlow Dry\r\nFur Styling\r\nNails Trimming\r\nEar Cleaning\r\nMouth Wash', 1, 90.00),
+(2, 'Bath & Blow Dry', 'Medicated shampoo bath\r\nFur blow dry and styling', 1, 60.00);
 
 -- --------------------------------------------------------
 
@@ -95,6 +117,16 @@ CREATE TABLE `pet` (
   `customerID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `pet`
+--
+
+INSERT INTO `pet` (`petID`, `petName`, `petType`, `breed`, `birthDate`, `customerID`) VALUES
+('P002', 'Tutu', 'Cat', 'Persian', '2020-01-22', '1'),
+('P003', 'Wawan', 'Cat', 'Persian', '2020-01-22', '1'),
+('P004', 'Yayang', 'Cat', 'Persian', '2025-02-28', '1'),
+('P005', 'Oyen', 'Cat', 'Persian', '2019-07-10', '1');
+
 -- --------------------------------------------------------
 
 --
@@ -110,6 +142,13 @@ CREATE TABLE `staff` (
   `role` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `staff`
+--
+
+INSERT INTO `staff` (`staffID`, `name`, `email`, `phone`, `password`, `role`) VALUES
+('', 'AdminNia', 'niaisabelle2004@gmail.com', '01125127485', 'Admin1234', 'Admin');
+
 -- --------------------------------------------------------
 
 --
@@ -122,6 +161,14 @@ CREATE TABLE `timeslot` (
   `slotTime` time DEFAULT NULL,
   `availability` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `timeslot`
+--
+
+INSERT INTO `timeslot` (`slotID`, `slotDate`, `slotTime`, `availability`) VALUES
+('T001', '2026-07-15', '08:00:00', 'Available'),
+('T002', '2026-07-08', '09:00:00', 'Booked');
 
 --
 -- Indexes for dumped tables
@@ -176,6 +223,16 @@ ALTER TABLE `timeslot`
   ADD PRIMARY KEY (`slotID`);
 
 --
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `grooming`
+--
+ALTER TABLE `grooming`
+  MODIFY `serviceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -184,7 +241,6 @@ ALTER TABLE `timeslot`
 --
 ALTER TABLE `appointment`
   ADD CONSTRAINT `appointment_ibfk_1` FOREIGN KEY (`petID`) REFERENCES `pet` (`petID`),
-  ADD CONSTRAINT `appointment_ibfk_2` FOREIGN KEY (`serviceID`) REFERENCES `grooming` (`serviceID`),
   ADD CONSTRAINT `appointment_ibfk_3` FOREIGN KEY (`slotID`) REFERENCES `timeslot` (`slotID`);
 
 --

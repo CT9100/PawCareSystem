@@ -151,43 +151,44 @@
     <h1>Welcome to PawCare</h1>
 
     <p class="intro">
-        Book professional pet care services quickly and easily.
-        PawCare helps pet owners schedule appointments for grooming,
-        veterinary check-ups, vaccinations, and pet boarding—all in one place.
+        Welcome to PawCare, your trusted pet grooming booking system.
+        Easily schedule professional grooming appointments for your beloved pets,
+        from full grooming packages and refreshing baths to nail trimming and spa treatments.
+        Keeping your furry friends clean, healthy, and looking their best has never been easier.
     </p>
 
     <div class="services">
 
         <div class="service-card">
             <div class="image-container">
-                <img src="images/grooming.jpg" alt="Pet Grooming">
+                <img src="images/grooming.jpg" alt="Full Grooming">
             </div>
-                <h3>Pet Grooming</h3>
-                <p>Professional grooming services to keep your pets clean, healthy, and happy.</p>
+            <h3>Full Grooming</h3>
+            <p>Complete grooming package including bath, haircut, nail trimming, ear cleaning, and blow drying.</p>
         </div>
 
         <div class="service-card">
             <div class="image-container">
-                <img src="images/vet.jpg" alt="Veterinary">
+                <img src="images/bath.jpg" alt="Bath & Blow">
             </div>
-                <h3>Veterinary Check-up</h3>
-                <p>Book appointments with experienced veterinarians for regular health check-ups.</p>
+            <h3>Bath & Blow Dry</h3>
+            <p>Keep your pet fresh and clean with a relaxing bath, gentle shampoo, and professional blow drying.</p>
         </div>
 
         <div class="service-card">
             <div class="image-container">
-                <img src="images/vaccine.jpg" alt="Vaccination">
+                <img src="images/nail.jpg" alt="Nail Trimming">
             </div>
-                <h3>Vaccination</h3>
-                <p>Schedule vaccination appointments to protect your pets from common diseases.</p>
-        </div>    
+            <h3>Nail Trimming</h3>
+            <p>Safe nail trimming to maintain your pet's comfort and prevent overgrown nails.</p>
+        </div>
 
         <div class="service-card">
             <div class="image-container">
-                <img src="images/boarding.jpg" alt="Pet Boarding">
+                <img src="images/spa.jpg" alt="Pet Spa">
             </div>
-                <h3>Pet Boarding</h3>
-                <p>Safe and comfortable boarding services while you're away from home.</p>
+            <h3>Pet Spa Treatment</h3>
+            <p>Pamper your furry friend with relaxing spa treatments that promote a healthy coat and skin.</p>
         </div>
 
     </div>

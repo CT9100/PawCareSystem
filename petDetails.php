@@ -218,25 +218,61 @@
         flex-direction: column;
     }
 
-    /* NAV BUTTON */
-    .navbar{
-        background:#8cd3e6;
-        padding:15px 30px;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-    }
+     /* Top Navigation Header Matching image_47a522.png Layout Exactly */
+        .navbar {
+            background-color: #8cd3e6;
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .logo-container {
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding-bottom: 5px;
+        }
+        .nav-links a.active {
+            border-bottom: 3px solid white;
+        }
+        
+        .avatar-icon {
+            width: 35px;
+            height: 35px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            font-weight: bold;
+        }
 
-    .nav-btn{
-        background:#f3be6b;
-        padding:10px 15px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        font-weight:bold;
-        text-decoration:none;
-        color:#333;
-    }
+         .nav-btn{
+            background:#f3be6b;
+            padding:10px 15px;
+            border-radius:20px;
+            border:none;
+            cursor:pointer;
+            font-weight:bold;
+            text-decoration:none;
+            color:#333;
+        }
 
     .modal{
         display:none;
@@ -267,8 +303,14 @@
 </style>
 <body>
 <div class="navbar">
-    <div>🐾 PawCare - Pet Details</div>
-
+        <div class="logo-container">
+            <span style="color:#2b5c8f; font-weight:bold; font-size:18px;">🐾 PawCare</span>
+        </div>
+        <div class="nav-links">
+            <a href="booking.php">Booking</a>
+            <a href="petDetails.php"  class = "active">My Pets</a>
+            <a href="ownerDetails.php">My Profile</a>
+        </div>
     <div>
         <button onclick="toggleForm()" class="nav-btn">➕ Add Pet</button>
         <a href="dashboard.php" class="nav-btn">← Back</a>

@@ -22,10 +22,15 @@ $pet_count_data = mysqli_fetch_assoc($pet_count_result);
 $total_pets = $pet_count_data['total_pets'];
 
 // 3. Count total active appointments for metrics card display
-$app_count_sql = "SELECT COUNT(*) as total_apps FROM appointment a 
+$app_count_sql = "SELECT COUNT(*) as total_apps 
+                  FROM appointment a 
                   JOIN pet p ON a.petID = p.petID 
-                  WHERE p.customerID='$customerID' AND a.status != 'Cancelled'";
+                  WHERE p.customerID='$customerID' 
+                  AND (a.status='Pending' OR a.status='Confirmed')";
 $app_count_result = mysqli_query($conn, $app_count_sql);
+                    if (!$app_count_result) {
+                        die("SQL Error: " . mysqli_error($conn));
+                    }
 $app_count_data = mysqli_fetch_assoc($app_count_result);
 $total_appointments = $app_count_data['total_apps'];
 ?>
@@ -259,19 +264,28 @@ $total_appointments = $app_count_data['total_apps'];
                         <th>Pet Type</th>
                         <th>Booking Date</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     // Select appointment and matching pet parameters from database schema
-                    $app_sql = "SELECT a.appointmentID, p.petName, p.petType, a.bookingDate, a.status 
-                                FROM appointment a
-                                JOIN pet p ON a.petID = p.petID
-                                WHERE p.customerID = '$customerID'
-                                ORDER BY a.bookingDate DESC";
+                  $app_sql = "SELECT 
+                        a.appointmentID,
+                        p.petName,
+                        p.petType,
+                        s.slotDate,
+                        a.status
+                    FROM appointment a
+                    JOIN pet p 
+                        ON a.petID = p.petID
+                    JOIN timeslot s
+                        ON a.slotID = s.slotID
+                    WHERE p.customerID = '$customerID'
+                    ORDER BY s.slotDate DESC";
                     $app_result = mysqli_query($conn, $app_sql);
 
-                    if (mysqli_num_rows($app_result) > 0) {
+                    if ($app_result && mysqli_num_rows($app_result) > 0) {
                         while ($row = mysqli_fetch_assoc($app_result)) {
                             // Assign specific styling layout components depending on status configurations
                             $status_class = "status-pending";
@@ -282,12 +296,43 @@ $total_appointments = $app_count_data['total_apps'];
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($row['petName']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['petType']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['bookingDate']) . "</td>";
-                            echo "<td><span class='status-badge {$status_class}'>" . htmlspecialchars($row['status']) . "</span></td>";
-                            echo "</tr>";
+                            echo "<td>" . htmlspecialchars($row['slotDate']) . "</td>";
+                            echo "<td>
+                            <span class='status-badge {$status_class}'>" 
+                            . htmlspecialchars($row['status']) .
+                        "</span>
+                        </td>";
+
+
+                    // Cancel button only appears for active bookings
+                    if(strtolower($row['status']) != 'cancelled' && 
+                    strtolower($row['status']) != 'completed'){
+
+                        echo "<td>
+                                <a href='cancelBooking.php?appointmentID=".$row['appointmentID']."'
+                                onclick=\"return confirm('Are you sure you want to cancel this booking?');\"
+                                style='
+                                    background:#d9534f;
+                                    color:white;
+                                    padding:8px 15px;
+                                    border-radius:20px;
+                                    text-decoration:none;
+                                    font-size:13px;
+                                    font-weight:bold;
+                                '>
+                                Cancel
+                                </a>
+                            </td>";
+
+                    }
+                    else{
+
+                        echo "<td>-</td>";
+
+                    }
                         }
                     } else {
-                        echo "<tr><td colspan='4' style='text-align: center; color: #888;'>No scheduled appointments found.</td></tr>";
+                        echo "<tr><td colspan=54' style='text-align: center; color: #888;'>No scheduled appointments found.</td></tr>";
                     }
                     ?>
                 </tbody>

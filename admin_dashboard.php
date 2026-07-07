@@ -19,12 +19,14 @@ $query = "
         a.status,
         p.petName, 
         c.name AS ownerName, 
+        s.serviceName,
         t.slotDate, 
         t.slotTime
-    FROM Appointment a
-    JOIN Pet p ON a.petID = p.petID
-    JOIN Customer c ON p.customerID = c.customerID
-    JOIN TimeSlot t ON a.slotID = t.slotID
+    FROM appointment a
+    JOIN pet p ON a.petID = p.petID
+    JOIN customer c ON p.customerID = c.customerID
+    JOIN timeslot t ON a.slotID = t.slotID
+    JOIN grooming s ON a.serviceID = s.serviceID
     WHERE 1=1 
 ";
 
@@ -74,10 +76,23 @@ $result = $conn->query($query);
         .btn-clear { color: white; text-decoration: underline; font-size: 16px; margin-left: 10px; }
 
         /* Data Grid Styles */
-        .grid-headers { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; margin-bottom: 15px; text-align: center; }
+        .grid-headers {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .grid-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            align-items: center;
+        }
         .header-cell { background-color: #ffc059; padding: 15px; border-radius: 10px; font-weight: bold; color: #333; }
-        
-        .grid-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; margin-bottom: 15px; text-align: center; align-items: center; }
         .data-cell { background-color: #1ccbf2; padding: 15px; border-radius: 10px; color: #333; font-weight: 500; }
         
         .btn-update { background-color: #8be763; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; color: #333; width: 100%; font-size: 14px; }
@@ -90,7 +105,8 @@ $result = $conn->query($query);
     <div class="navbar">
         <div class="logo">🐾 PawCare</div>
         <div class="nav-links">
-            <a href="admin_dashboard.php" class="active">Booking record</a>
+            <a href="admin_dashboard.php" class="active">Booking Record</a>
+            <a href="service.php">Services</a>
             <a href="time_slot.php">Time Slots</a>
             <a href="report.php">Report</a>
         </div>
@@ -122,8 +138,9 @@ $result = $conn->query($query);
         </form>
 
         <div class="grid-headers">
-            <div class="header-cell">Pet name</div>
-            <div class="header-cell">Owner name</div>
+            <div class="header-cell">Pet Name</div>
+            <div class="header-cell">Owner Name</div>
+            <div class="header-cell">Service</div>
             <div class="header-cell">Date</div>
             <div class="header-cell">Time</div>
             <div class="header-cell">Status</div>
@@ -140,6 +157,7 @@ $result = $conn->query($query);
                     echo '<div class="grid-row">';
                     echo '<div class="data-cell">' . htmlspecialchars($row['petName']) . '</div>';
                     echo '<div class="data-cell">' . htmlspecialchars($row['ownerName']) . '</div>';
+                    echo '<div class="data-cell">' . htmlspecialchars($row['serviceName']) . '</div>';
                     echo '<div class="data-cell">' . $formattedDate . '</div>';
                     echo '<div class="data-cell">' . $formattedTime . '</div>';
                     echo '<div class="data-cell">' . htmlspecialchars($row['status']) . '</div>';
