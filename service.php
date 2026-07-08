@@ -189,7 +189,7 @@ echo '
 
 
     <div class="data-cell">
-        '.$row['duration'].' min
+        '.$row['duration'].' hour(s)
     </div>
 
 

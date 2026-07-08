@@ -430,16 +430,19 @@
 <script>
     window.onload = function(){
 
-        document.querySelectorAll('.paw').forEach(paw=>{
+    document.querySelectorAll('.paw').forEach(paw=>{
 
-            paw.style.left = Math.random()*100 + "vw";
-            paw.style.animationDuration = (5 + Math.random()*6) + "s";
-            paw.style.fontSize = (16 + Math.random()*22) + "px";
-            paw.style.animationDelay = Math.random()*5 + "s";
+        paw.style.left = Math.random()*100 + "vw";
+        paw.style.animationDuration = (5 + Math.random()*6) + "s";
+        paw.style.fontSize = (16 + Math.random()*22) + "px";
+        paw.style.animationDelay = Math.random()*5 + "s";
 
-        });
+    });
 
-    };
+    <?php if($edit){ ?>
+        document.getElementById("formCard").style.display="flex";
+    <?php } ?>
+};
 </script>
 <div id="petModal" class="modal">
     <div class="modal-content">
